@@ -4,3 +4,5 @@
 void initMotores();
 // Função de parada do robo:
 void paradaRobo();
+// Função de corrida dos motores:
+void corridaMotores();
