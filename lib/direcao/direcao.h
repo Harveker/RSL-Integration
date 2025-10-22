@@ -1,8 +1,12 @@
 #pragma once
 
 // Função para ajustar a direção do robô
-void ajustarDirecao(int direcao);
-
+void ajustarDirecao(int (&direcao)[5]);
+void esquerda();
+void esquerdacurta();
+void direita();
+void direitacurta();
+void transicaoDirecao(MaquinasDeEstado &me);
 // Função para parar a direção do robô
 void pararDirecao();
 

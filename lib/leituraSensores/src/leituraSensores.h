@@ -5,4 +5,4 @@ extern int valorSensores[5];
 void configSensores();
 
 // Função de leitura dos sensores:
-int lerSensores();
+void lerSensores();

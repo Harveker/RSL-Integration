@@ -3,6 +3,7 @@
 #include "misc.h"
 #include "initStopRobo.h"
 #include "leituraSensores.h"
+#include "direcao.h"
 
 // Definição de pinos:
 
@@ -25,11 +26,17 @@ void setup()
   initConfig();
   configSensores();
   Serial.println("Configurações iniciais feitas.");
-  Serial.println("Iniciando teste dos motores...");
-  while(!debounceBotao()){
-  }  
-  Serial.println("Botão pressionado, iniciando sequência...");
-  testMotores();
+  Serial.println("Teste de motores pressione o botao em até 3 segundos para testar...");
+  timer = millis() + 3000; // Espera 3 segundos antes de iniciar
+  while(millis() < timer){
+    if(debounceBotao()){
+      Serial.println("Iniciando teste dos motores");
+      testMotores();
+      break;
+    }
+  }
+  Serial.println("Teste de motores cancelado, seguindo...");
+  delay(10);
   Serial.println("Iniciando em 3 segundos...");
   Serial.println("pressione o botão para modo debug");
   timer = millis() + 3000; // Espera 3 segundos antes de iniciar
@@ -41,8 +48,8 @@ void setup()
     }
   }
   Serial.println("Iniciando corrida dos motores...");
+  delay(10);
   // Outras inicializações podem ser adicionadas aqui
-
 
 
 }
@@ -50,5 +57,11 @@ void setup()
 void loop()
 {
   // put your main code here, to run repeatedly:
-  lerSensores();
+  Serial.println("Lendo sensores");
+  lerSensores(); //função void que atualiza os sensores de linha e ldr
+  while(doublePressBotao()){}
+  //vamos começar com uma ideia binária do robo
+  //queremos que este, vire na direção da linha apenas (o quanto será uma questão matematica que veremos posteriormente)
+  //ajustarDirecao(valorSensores[0]);
+
 }

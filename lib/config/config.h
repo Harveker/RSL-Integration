@@ -23,9 +23,15 @@ const int MOTORES[4] = {PWMIN1, PWMIN2, PWMIN3, PWMIN4};
 #define LDR A1  // Sensor de luz ambiente
 // Array com os pinos dos sensores
 const int SENSORES[5] = {LE, CE, CD, LD, LDR};
-
+//variaveis globais
 extern int valorButao;
 extern int valorSensores[5];
-extern int timer;
-
+extern unsigned long timer;
+//maquina de estados de direção
+enum Direcao {
+    ESQUERDA,
+    ESQUERDACURTA,
+    DIREITA,
+    DIREITACURTA
+};
 void initConfig();
