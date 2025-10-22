@@ -1,6 +1,9 @@
 #include <Arduino.h>
-#include "pins.h"
 #include "config.h"
+#include <Arduino.h>
+
+int valorSensores[5] = {0, 0, 0, 0, 0}; // Array para armazenar os valores lidos dos sensores
+int valorButao = 0; // Variável para armazenar o estado do botão
 
 void initConfig()
 {

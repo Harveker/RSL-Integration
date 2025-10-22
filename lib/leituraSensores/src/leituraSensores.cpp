@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <pins.h>
+#include "config.h"
 #include "leituraSensores.h"
 
 // Função de configuração dos sensores:

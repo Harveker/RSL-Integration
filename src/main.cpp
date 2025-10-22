@@ -1,8 +1,8 @@
 #include <Arduino.h>
-#include <pins.h>
 #include "config.h"
 #include "misc.h"
 #include "initStopRobo.h"
+#include "leituraSensores.h"
 
 // Definição de pinos:
 
@@ -21,32 +21,34 @@ Depois de planejar a estrutura do programa, podemos começar a escrever o códig
 void setup()
 {
   // put your setup code here, to run once:
-  Serial.begin(115200);
+  Serial.begin(9600);
   initConfig();
+  configSensores();
+  Serial.println("Configurações iniciais feitas.");
+  Serial.println("Iniciando teste dos motores...");
+  while(!debounceBotao()){
+  }  
+  Serial.println("Botão pressionado, iniciando sequência...");
+  testMotores();
+  Serial.println("Iniciando em 3 segundos...");
+  Serial.println("pressione o botão para modo debug");
+  timer = millis() + 3000; // Espera 3 segundos antes de iniciar
+  while(millis() < timer){
+    if(debounceBotao()){
+      Serial.println("Modo debug ativado.");
+      // Aqui podemos adicionar código para o modo debug
+      break;
+    }
+  }
+  Serial.println("Iniciando corrida dos motores...");
   // Outras inicializações podem ser adicionadas aqui
+
+
+
 }
 
 void loop()
 {
   // put your main code here, to run repeatedly:
-  if (debounceBotao()){
-    valorButao++;
-  }
-  switch (valorButao){
-    case 1:
-    Serial.println("Iniciando motores...");
-    initMotores();
-    Serial.println("Motores inicializados.");
-    break;
-    case 2:
-    Serial.println("Modo de corrida dos motores...");
-    corridaMotores();
-    break;
-    case 3:
-    Serial.println("Parando robo...");
-    paradaRobo();
-    break;
-    default:
-    break;
-  }
+  lerSensores();
 }
