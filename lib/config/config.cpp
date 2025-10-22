@@ -4,7 +4,7 @@
 
 int valorSensores[5] = {0, 0, 0, 0, 0}; // Array para armazenar os valores lidos dos sensores
 int valorButao = 0; // Variável para armazenar o estado do botão
-unsigned long timer = 0;
+unsigned long timer = 0;    //variável para interrupções
 
 void initConfig()
 {

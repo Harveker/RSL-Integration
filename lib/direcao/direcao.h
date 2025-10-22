@@ -1,12 +1,31 @@
 #pragma once
 
-// Função para ajustar a direção do robô
-void ajustarDirecao(int (&direcao)[5]);
+//variáveis externas
+// Strutura para maquina de estado ser chamada
+struct MaquinasDeEstado
+{
+    Direcao direcaoAtual;
+    void (*estadoDirecao)();
+};
+
+// Função direcionando o robo para frente
+void frente();
+// Função direcionando o robo para esquerda
 void esquerda();
-void esquerdacurta();
+// Função direcionando o robo para esquerda fechada
+void esquerdaCurta();
+// Função direcionando o robo para direita
 void direita();
-void direitacurta();
+// Função direcionando o robo para direita fechada
+void direitaCurta();
+// Função de parada através do sensor
+bool paradaSensoriada(int valorSensores[]);
+// Função de maquina de Estado para direcionar o robo de acordo com os sensores de linha
 void transicaoDirecao(MaquinasDeEstado &me);
+// Função de detecção para curva
+bool limiteDeCurvaSensores();
+// Função de escolha de direção baseado nos sensores
+vS decisaoSensor (int valorSensores[]);
 // Função para parar a direção do robô
 void pararDirecao();
 

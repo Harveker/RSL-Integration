@@ -23,12 +23,19 @@ const int MOTORES[4] = {PWMIN1, PWMIN2, PWMIN3, PWMIN4};
 #define LDR A1  // Sensor de luz ambiente
 // Array com os pinos dos sensores
 const int SENSORES[5] = {LE, CE, CD, LD, LDR};
+// Numero de sensores
+const int NUM_SENSORES = sizeof(SENSORES[5])/sizeof(SENSORES[0]);
 //variaveis globais
 extern int valorButao;
-extern int valorSensores[5];
+struct valorSensores {
+    int status[NUM_SENSORES];
+} typedef vS;
+
 extern unsigned long timer;
 //maquina de estados de direção
 enum Direcao {
+    PARADO,
+    FRENTE,
     ESQUERDA,
     ESQUERDACURTA,
     DIREITA,

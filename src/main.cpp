@@ -18,6 +18,7 @@ Depois de definir as funções, podemos declarar as variáveis necessárias.
 Por exemplo, variáveis para armazenar os valores dos sensores, a velocidade dos motores, etc.
 Depois de planejar a estrutura do programa, podemos começar a escrever o código.
 */
+MaquinasDeEstado estadoAtual = {PARADO, paradaRobo};  //inicializando maquina de estado parada
 
 void setup()
 {
@@ -49,8 +50,9 @@ void setup()
   }
   Serial.println("Iniciando corrida dos motores...");
   delay(10);
+  Serial.println("Modo competição habilitado...");
+  
   // Outras inicializações podem ser adicionadas aqui
-
 
 }
 
@@ -62,6 +64,5 @@ void loop()
   while(doublePressBotao()){}
   //vamos começar com uma ideia binária do robo
   //queremos que este, vire na direção da linha apenas (o quanto será uma questão matematica que veremos posteriormente)
-  //ajustarDirecao(valorSensores[0]);
-
+  transicaoDirecao(estadoAtual);
 }
