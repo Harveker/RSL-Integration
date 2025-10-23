@@ -1,56 +1,69 @@
 #include <Arduino.h>
 #include "config.h"
 
-// Implementação de funções diversas
-bool debounceBotao() {
+bool debounceBotao()
+{
     static unsigned long lastPressTime = 0;
-    const unsigned long debounceDelay = 50; // Tempo de debounce em milissegundos
+    const unsigned long debounceDelay = 50;
     unsigned long currentTime = millis();
-
-    if (digitalRead(BOTAO) == HIGH) {
-        if (currentTime - lastPressTime > debounceDelay) {
+    if (digitalRead(BOTAO) == HIGH)
+    {
+        if (currentTime - lastPressTime > debounceDelay)
+        {
             lastPressTime = currentTime;
-            return true; // Botão pressionado com sucesso após debounce
+            return true;
         }
     }
-    return false; // Botão não pressionado ou ainda em debounce
+    return false;
 }
-
-bool doublePressBotao() {
+bool doublePressBotao()
+{
     static unsigned long firstPressTime = 0;
-    const unsigned long doublePressDelay = 500; // Tempo máximo entre os dois pressionamentos
-
-    if (digitalRead(BOTAO) == HIGH) {
+    const unsigned long doublePressDelay = 500;
+    if (digitalRead(BOTAO) == HIGH)
+    {
         unsigned long currentTime = millis();
-        if (firstPressTime == 0) {
-            firstPressTime = currentTime; // Primeiro pressionamento
-        } else {
-            if (currentTime - firstPressTime <= doublePressDelay) {
-                firstPressTime = 0; // Reset para o próximo duplo pressionamento
-                return true; // Duplo pressionamento detectado
-            } else {
-                firstPressTime = currentTime; // Atualiza o tempo do primeiro pressionamento
+        if (firstPressTime == 0)
+        {
+            firstPressTime = currentTime;
+        }
+        else
+        {
+            if (currentTime - firstPressTime <= doublePressDelay)
+            {
+                firstPressTime = 0;
+                return true;
+            }
+            else
+            {
+                firstPressTime = currentTime;
             }
         }
     }
-    return false; // Duplo pressionamento não detectado
+    return false;
 }
-
-bool holdPressBotao() {
+bool holdPressBotao()
+{
     static unsigned long pressStartTime = 0;
-    const unsigned long holdPressDelay = 1000; // Tempo mínimo para considerar como pressionamento longo
-
-    if (digitalRead(BOTAO) == HIGH) {
-        if (pressStartTime == 0) {
-            pressStartTime = millis(); // Inicia o tempo do pressionamento
-        } else {
-            if (millis() - pressStartTime >= holdPressDelay) {
-                pressStartTime = 0; // Reset para o próximo pressionamento longo
-                return true; // Pressionamento longo detectado
+    const unsigned long holdPressDelay = 1000;
+    if (digitalRead(BOTAO) == HIGH)
+    {
+        if (pressStartTime == 0)
+        {
+            pressStartTime = millis();
+        }
+        else
+        {
+            if (millis() - pressStartTime >= holdPressDelay)
+            {
+                pressStartTime = 0;
+                return true;
             }
         }
-    } else {
-        pressStartTime = 0; // Reseta se o botão for solto
     }
-    return false; // Pressionamento longo não detectado
+    else
+    {
+        pressStartTime = 0;
+    }
+    return false;
 }

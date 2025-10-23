@@ -20,6 +20,8 @@ Depois de planejar a estrutura do programa, podemos começar a escrever o códig
 */
 MaquinasDeEstado estadoAtual = {PARADO, paradaRobo};  //inicializando maquina de estado parada
 
+bool paradaEmergencial = false;
+
 void setup()
 {
   // put your setup code here, to run once:
@@ -59,10 +61,11 @@ void setup()
 void loop()
 {
   // put your main code here, to run repeatedly:
-  Serial.println("Lendo sensores");
+  //Serial.println("Lendo sensores");
   lerSensores(); //função void que atualiza os sensores de linha e ldr
   while(doublePressBotao()){}
   //vamos começar com uma ideia binária do robo
   //queremos que este, vire na direção da linha apenas (o quanto será uma questão matematica que veremos posteriormente)
   transicaoDirecao(estadoAtual);
+  estadoAtual.estadoDirecao();
 }

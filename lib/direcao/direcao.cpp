@@ -5,7 +5,6 @@
 #include "initStopRobo.h"
 #include "misc.h"
 
-
 /*🧠 Structural Suggestion (for future maintainability)
 
 You can replace the long motor-setting functions with a single parametric one:
@@ -70,7 +69,7 @@ bool paradaSensoriada(int valorSensores[])
 {
     for (size_t i = 0; i < NUM_SENSORES - 1; i++) //-1 pois o ultimo é o LDR
     {
-        if (valorSensores[i] > 200) // identifica quando os sensores passam por uma chegada.
+        if (valorSensores[i] > LIMITE_PARADA) // identifica quando os sensores passam por uma chegada.
         {
             return false;
         }
@@ -78,11 +77,11 @@ bool paradaSensoriada(int valorSensores[])
     return true;
 }
 
-bool limiteDeCurvaSensores()
+bool limiteDeCurvaSensores()        //nao sendo usado no momento
 {
     for (size_t i = 0; i < NUM_SENSORES - 1; i++) //-1 pois o ultimo é o LDR
     {
-        if (valorSensores[i] <= 200)
+        if (valorSensores[i] > LIMITE_PARADA)
         {
             return true;
         }
@@ -92,68 +91,83 @@ bool limiteDeCurvaSensores()
 
 vS decisaoSensor(int valorSensores[])
 {
-    vS resultado;
+    vS resultado = {};
     for (size_t i = 0; i < NUM_SENSORES - 1; i++) //-1 pois o ultimo é o LDR
     {
-        if (valorSensores[i] < 200)
+        if (valorSensores[i] < LIMITE_CURVA)
         {
             resultado.status[i] = valorSensores[i];
-            return resultado;
+        } else {
+            resultado.status[i] = -1;
         }
+    // nenhum sensor detectou curva → inicializa todos com -1 ou valor alto
     }
-    for (size_t i = 0; i < NUM_SENSORES; i++) // inicialização se nenhum sensor for para curva
-    {
-        resultado.status[i] = -1;
-    }
+
     return resultado;
 }
 
 void transicaoDirecao(MaquinasDeEstado &me)
 {
+    lerSensores();  //avalia os sensores antes de tudo
+    
     switch (me.direcaoAtual)
     {
-    case FRENTE: {
-        while (limiteDeCurvaSensores()) // continuará reto até uma linha interceptar os sensores centrais
-        {
-            lerSensores();     // atualiza valores
-        }
-        vS decisao = decisaoSensor(valorSensores);
-        if (paradaSensoriada(valorSensores)) // se detectar uma faixa para o robo
-        {
+    case FRENTE:
+    {
+        debugEstado("[STATE] FRENTE");
+        
+        me.estadoDirecao = frente;
+
+        /* if (debounceBotao()) {
+            delay(200);
             me.direcaoAtual = PARADO;
             me.estadoDirecao = paradaRobo;
+            Serial.println("[TRANSITION] FRENTE → PARADO (botão pressionado)");
+            return;
+        } */
+
+        lerSensores();
+        if (paradaSensoriada(valorSensores)) // se detectar uma faixa para o robo
+        {
+            debugEstado("[TRANSITION] FRENTE → PARADO (faixa detectada)");
+            me.direcaoAtual = PARADO;
+            me.estadoDirecao = paradaRobo;
+            return;
         }
+        vS decisao = decisaoSensor(valorSensores);
         for (size_t i = 0; i < NUM_SENSORES - 1; i++)
         {
-            if (decisao.status[i] <= 200) // limite para começar uma curva
+            if (decisao.status[i] <= LIMITE_CURVA && decisao.status[i] != -1) // limite para começar uma curva
             {
+                debugEstado("entra nas decisões");
                 switch (SENSORES[i])
                 {
                 case CE: // se interceptar o sensor central esquerdo
                 {
+                    debugEstado("[TRANSITION] FRENTE → ESQUERDA");
                     me.direcaoAtual = ESQUERDA;
                     me.estadoDirecao = esquerda;
-                    break;
+                    return;
                 }
                 case LE: // se interceptar o sensor lateral esquerdo
                 {
+                    debugEstado("[TRANSITION] FRENTE → ESQUERDACURTA");
                     me.direcaoAtual = ESQUERDACURTA;
                     me.estadoDirecao = esquerdaCurta;
-                    break;
+                    return;
                 }
                 case CD: // se interceptar o sensor central direito
                 {
+                    debugEstado("[TRANSITION] FRENTE → DIREITA");
                     me.direcaoAtual = DIREITA;
                     me.estadoDirecao = direita;
-                    break;
+                    return;
                 }
                 case LD: // se interceptar o sensor lateral direito
+                    debugEstado("[TRANSITION] FRENTE → DIREITACURTA");
                     me.direcaoAtual = DIREITACURTA;
                     me.estadoDirecao = direitaCurta;
-                    break;
-
-                default:
-                    break;
+                    return;
                 }
             }
         }
@@ -161,51 +175,69 @@ void transicaoDirecao(MaquinasDeEstado &me)
     }
     case ESQUERDACURTA:
     {
-        while (valorSensores[0] <= 200)
-        {
-        }
+        me.estadoDirecao = esquerdaCurta;
+        lerSensores();
+        debugEstado("[STATE] ESQUERDACURTA");
+        if(valorSensores[1]<= LIMITE_CURVA) {
+        debugEstado("[TRANSITION] ESQUERDACURTA → FRENTE");
         me.direcaoAtual = FRENTE;
         me.estadoDirecao = frente;
+        }
         break;
     }
     case ESQUERDA:
     {
-        while (valorSensores[1] <= 200)
-        {
-        } // sensor CE
+        me.estadoDirecao = esquerda;
+        lerSensores();
+        debugEstado("[STATE] ESQUERDA");
+        if(valorSensores[2]<= LIMITE_CURVA) {
+        debugEstado("[TRANSITION] ESQUERDA → FRENTE");
         me.direcaoAtual = FRENTE;
         me.estadoDirecao = frente;
+        }
         break;
     }
     case DIREITA:
     {
-        while (valorSensores[2] <= 200)
-        {
-        }
+        me.estadoDirecao = direita;
+        lerSensores();
+        debugEstado("[STATE] DIREITA");
+        if(valorSensores[2]<= LIMITE_CURVA) {
+        debugEstado("[TRANSITION] DIREITA → FRENTE");
         me.direcaoAtual = FRENTE;
         me.estadoDirecao = frente;
+        }
         break;
     }
     case DIREITACURTA:
     {
-        while (valorSensores[3] <= 200)
-        {
-        }
+        me.estadoDirecao = direitaCurta;
+        lerSensores();
+        debugEstado("[STATE] DIREITACURTA");
+        if(valorSensores[3]<= LIMITE_CURVA) {
+        debugEstado("[TRANSITION] DIREITACURTA → FRENTE");
         me.direcaoAtual = FRENTE;
         me.estadoDirecao = frente;
+        }
         break;
     }
     case PARADO:
     {
-        while (!holdPressBotao())
+        lerSensores();
+        debugEstado("[STATE] PARADO — aguardando botão");
+        me.estadoDirecao = paradaRobo;
+        if (debounceBotao())
         {
-            delay(10); 
+            delay(200);
+            Serial.println("[TRANSITION] PARADO → FRENTE (botão pressionado)");
+            me.direcaoAtual = FRENTE;
+            me.estadoDirecao = frente;
         }
-        me.direcaoAtual = FRENTE;
-        me.estadoDirecao = frente;
         break;
     }
     default:
+        lerSensores();
+        debugEstado("[STATE] DEFAULT (fallback para PARADO)");
         me.direcaoAtual = PARADO;
         me.estadoDirecao = paradaRobo;
         break;

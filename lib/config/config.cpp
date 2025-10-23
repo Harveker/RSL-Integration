@@ -1,10 +1,12 @@
 #include <Arduino.h>
 #include "config.h"
 #include <Arduino.h>
+#include "misc.h"
 
 int valorSensores[5] = {0, 0, 0, 0, 0}; // Array para armazenar os valores lidos dos sensores
-int valorButao = 0; // Variável para armazenar o estado do botão
-unsigned long timer = 0;    //variável para interrupções
+int valorButao = 0;                     // Variável para armazenar o estado do botão
+unsigned long timer = 0;                // variável para interrupções
+const char* rotulos[] = {"LE", "CE", "CD", "LD", "LDR"};
 
 void initConfig()
 {
@@ -26,5 +28,4 @@ void initConfig()
     // Inicialização do buzzer em estado desligado
     digitalWrite(BUZZER, LOW);
     // Outras configurações iniciais podem ser adicionadas aqui
-    
 }

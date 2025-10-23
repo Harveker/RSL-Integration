@@ -1,5 +1,10 @@
 #pragma once
 
+#define LIMITE_PARADA 800
+#define LIMITE_CURVA 450
+
+const int SENSOR_PRETO[NUM_SENSORES] = {145, 88, 104, 123, 93}; 
+const int SENSOR_BRANCO[NUM_SENSORES] = {1023, 1023, 1023, 1023, 1023};
 //variáveis externas
 // Strutura para maquina de estado ser chamada
 struct MaquinasDeEstado
@@ -27,19 +32,6 @@ bool limiteDeCurvaSensores();
 // Função de escolha de direção baseado nos sensores
 vS decisaoSensor (int valorSensores[]);
 // Função para parar a direção do robô
-void pararDirecao();
-
-// Função para atualizar a direção do robô com base nos sensores
-void atualizarDirecao();
-
-// Função para configurar os pinos relacionados à direção
-void configurarPinosDirecao();
-
-// Função para obter o estado atual da direção
-int obterEstadoDirecao();
-
-// Função para definir o estado da direção
-void definirEstadoDirecao(int estado);
 
 // Função para calibrar a direção do robô
 void calibrarDirecao();

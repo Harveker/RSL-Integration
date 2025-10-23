@@ -6,3 +6,5 @@ void configSensores();
 
 // Função de leitura dos sensores:
 void lerSensores();
+
+void calibrarSensoresAuto(int valores[]);

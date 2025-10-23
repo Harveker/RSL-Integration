@@ -1,4 +1,8 @@
 #pragma once
+//macro de debug, comente para sumir com o debug
+#define DEBUG
+//macro de debug para os valores dos sensores, comente para sumir com o debug
+#define DEBUG_SENSORES
 
 // Definição dos pinos utilizados no robô
 #define DISPA 3
@@ -23,8 +27,10 @@ const int MOTORES[4] = {PWMIN1, PWMIN2, PWMIN3, PWMIN4};
 #define LDR A1  // Sensor de luz ambiente
 // Array com os pinos dos sensores
 const int SENSORES[5] = {LE, CE, CD, LD, LDR};
+extern const char* rotulos[];
+
 // Numero de sensores
-const int NUM_SENSORES = sizeof(SENSORES[5])/sizeof(SENSORES[0]);
+const int NUM_SENSORES = sizeof(SENSORES)/sizeof(SENSORES[0]);
 //variaveis globais
 extern int valorButao;
 struct valorSensores {
@@ -41,4 +47,5 @@ enum Direcao {
     DIREITA,
     DIREITACURTA
 };
+
 void initConfig();

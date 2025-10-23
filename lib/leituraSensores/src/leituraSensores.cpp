@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "config.h"
 #include "leituraSensores.h"
+#include "misc.h"
 
 // Função de configuração dos sensores:
 
@@ -14,37 +15,32 @@ void configSensores()
   pinMode(LDR, INPUT);
 }
 
+
+
 void lerSensores()
 {
   // Código para ler os sensores
-  Serial.println("Lendo sensores...");
+  debugEstado("Lendo sensores...");
   for (int i = 0; i < 5; i++)
   {
     valorSensores[i] = analogRead(SENSORES[i]); // Leitura analógica dos sensores
-    /* switch (i)
+
+    #ifdef DEBUG_SENSORES
+    // Print all sensors in one line
+    unsigned long agora = millis();
+    if (agora - timer >= 500UL)
     {
-    case 0:
-      Serial.println("LE :");
-      Serial.println(valorSensores[i]);
-      break;
-    case 1:
-      Serial.println("CE :");
-      Serial.println(valorSensores[i]);
-      break;
-    case 2:
-      Serial.println("CD :");
-      Serial.println(valorSensores[i]);
-      break;
-    case 3:
-      Serial.println("LD :");
-      Serial.println(valorSensores[i]);
-      break;
-    case 4:
-      Serial.println("LDR :");
-      Serial.println(valorSensores[i]);
-      break;
-    default:
-      break;
-    } */
+      Serial.print("Sensores: ");
+      for (int i = 0; i < 5; i++)
+      {
+        Serial.print(rotulos[i]);
+        Serial.print("=");
+        Serial.print(valorSensores[i]);
+        Serial.print("  ");
+      }
+      Serial.println();
+      timer = agora;
+    }
+    #endif
   }
 }
