@@ -29,15 +29,24 @@ RSL-Integration/
 ├── src/
 │   ├── main.cpp               # Core control loop and behavior definitions
 ├── lib/
+|   ├── config/
+|   │    ├── config.cpp    # Basic configuration of global variables, structures and functions
+|   │    └── config.h      # Declarations of thoose basic configuration of global variables, structures and functions
 |   ├── leituraSensores/
-|   │    ├── leituraSensores.cpp    # Sensor setup and reading functions
+|   │    ├── leituraSensores.cpp    # Sensor setup, reading and calibration functions
 |   │    └── leituraSensores.h      # Sensor function prototypes and shared variables
 |   ├── controleVelocidade/
 |   │    ├── controleVelocidade.cpp    # Setup and output in pwm to control motor speed
 |   │    └── controleVelocidade.h      # Motor speed function prototypes and shared variables
+|   ├── direcao/
+|   │    ├── direcao.cpp    # Sets the function of transition of a state machine to change directions
+|   │    └── direcao.h      # Prototype of the functions and some shared variables
 |   ├── initStopRobo/
-|   │    ├── initStopRobo.cpp    # Settings on how to stop and start the RSL
+|   │    ├── initStopRobo.cpp    # Settings on how to stop and start the RSL for a test
 |   │    └── initStopRobo.h      # init and stop function prototypes and shared variables
+|   ├── misc/
+|   │    ├── misc.cpp    # Functions involving macros and debounces of button, for easy and global acess
+|   │    └── misc.h      # Functions and macros prototypes and shared variables
 ├── platformio.ini             # PlatformIO configuration for Arduino
 └── README.md                  # Project documentation (this file)
 ```
